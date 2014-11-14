@@ -7,7 +7,7 @@ class EventDispatcherObjectBuilderModifier
 {
     private $behavior;
 
-    public function __construct(Behavior $behavior)
+    public function __construct(\Propel\Generator\Model\Behavior $behavior)
     {
         $this->behavior = $behavior;
     }
@@ -71,14 +71,6 @@ class EventDispatcherObjectBuilderModifier
             'eventName'      => $this->getEventName('construct'),
             'withConnection' => false,
         )) . '    ';
-    }
-
-    public function postHydrate()
-    {
-        return $this->behavior->renderTemplate('objectHook', array(
-            'eventName'      => $this->getEventName('post_hydrate'),
-            'withConnection' => false,
-        ));
     }
 
     public function preSave()
@@ -147,14 +139,14 @@ class EventDispatcherObjectBuilderModifier
 
     public function objectFilter(&$script)
     {
-        $script = preg_replace('#(implements Persistent)#', '$1, EventDispatcherAwareModelInterface', $script);
+        $script = preg_replace('#(implements ActiveRecordInterface)#', '$1, \EventDispatcherAwareModelInterface', $script);
 
         // rename the dummy_construct to __construct if __construct does not exists
         if (strpos($script, 'function __construct') === false) {
             $script = str_replace('function dummy_construct', 'function __construct', $script);
         }
 
-        $parser = new PropelPHPParser($script, true);
+        $parser = new \Propel\Generator\Util\PhpParser($script, true);
         $parser->removeMethod('dummy_construct');
         $oldCode = $parser->findMethod('__construct');
         $newCode = substr_replace($oldCode, $this->addConstructHook() . '}', strrpos($oldCode, '}'));

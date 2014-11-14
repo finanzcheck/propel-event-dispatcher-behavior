@@ -3,7 +3,8 @@ EventDispatcherBehavior
 
 [![Build Status](https://secure.travis-ci.org/willdurand/EventDispatcherBehavior.png?branch=master)](http://travis-ci.org/willdurand/EventDispatcherBehavior)
 
-Integrate the Symfony2 [EventDispatcher](https://github.com/symfony/EventDispatcher) component in your Model classes.
+Integrate the Symfony2 [EventDispatcher](https://github.com/symfony/EventDispatcher) component in your Model classes for Propel 2 alpha 3.
+Final Propel 2 release will have this integrated into core. This is only for guys using Propel 2 already till alpha 3 and need those behavior.
 
 
 ### Installation ###

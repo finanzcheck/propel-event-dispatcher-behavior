@@ -16,7 +16,7 @@ class EventDispatcherBehaviorTest extends \PHPUnit_Framework_TestCase
         <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
         <column name="name" type="VARCHAR" required="true" />
 
-        <behavior name="event_dispatcher" />
+        <behavior name="\EventDispatcherBehavior" />
     </table>
 </database>
 EOF
@@ -28,7 +28,7 @@ EOF
         <column name="text" type="VARCHAR" required="true" />
         <column name="allowed" type="boolean" required="true" defaultValue="false" />
 
-        <behavior name="event_dispatcher" />
+        <behavior name="\EventDispatcherBehavior" />
     </table>
 </database>
 EOF
@@ -36,9 +36,8 @@ EOF
 
         foreach ($tables as $className => $schema) {
             if (!class_exists($className)) {
-                $builder = new PropelQuickBuilder();
+                $builder = new \Propel\Generator\Util\QuickBuilder();
                 $config  = $builder->getConfig();
-                $config->setBuildProperty('behavior.event_dispatcher.class', '../src/EventDispatcherBehavior');
                 $builder->setConfig($config);
                 $builder->setSchema($schema);
 
@@ -77,18 +76,9 @@ EOF
         $preSaveFired  = false;
         $postSaveFired = false;
         $postConstructFired = false;
-        $postHydrateFired  = false;
         $threadConstructFired = false;
 
         $that = $this;
-
-        Post::getEventDispatcher()->addListener(Post::EVENT_POST_HYDRATE, function (Event $event) use (& $postHydrateFired, $that) {
-            $postHydrateFired = true;
-
-            $that->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
-            $that->assertInstanceOf('Post', $event->getSubject());
-            $that->assertFalse($event->hasArgument('connection'));
-        });
 
         Post::getEventDispatcher()->addListener(Post::EVENT_CONSTRUCT, function (Event $event) use (& $postConstructFired, $that) {
             $postConstructFired = true;
@@ -111,7 +101,7 @@ EOF
 
             $that->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
             $that->assertInstanceOf('Post', $event->getSubject());
-            $that->assertInstanceOf('PropelPDO', $event->getArgument('connection'));
+            $that->assertInstanceOf('Propel\Runtime\Connection\ConnectionInterface',  $event->getArgument('connection'));
         });
 
         Post::getEventDispatcher()->addListener(Post::EVENT_POST_SAVE, function (Event $event) use (& $postSaveFired, $that) {
@@ -119,12 +109,11 @@ EOF
 
             $that->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
             $that->assertInstanceOf('Post', $event->getSubject());
-            $that->assertInstanceOf('PropelPDO', $event->getArgument('connection'));
+            $that->assertInstanceOf('Propel\Runtime\Connection\ConnectionInterface', $event->getArgument('connection'));
         });
 
         new Thread();
         $this->assertTrue($threadConstructFired);
-
 
         $post = new Post();
         $this->assertTrue($postConstructFired);
@@ -133,7 +122,6 @@ EOF
         $post->save();
         $post->reload();
 
-        $this->assertTrue($postHydrateFired);
         $this->assertTrue($preSaveFired);
         $this->assertTrue($postSaveFired);
     }

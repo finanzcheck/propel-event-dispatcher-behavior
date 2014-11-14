@@ -17,14 +17,13 @@ class EventDispatcherBehaviorWithNamespacesTest extends \PHPUnit_Framework_TestC
         <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
         <column name="name" type="VARCHAR" required="true" />
 
-        <behavior name="event_dispatcher" />
+        <behavior name="\EventDispatcherBehavior" />
     </table>
 </database>
 EOF;
 
-            $builder = new PropelQuickBuilder();
+            $builder = new \Propel\Generator\Util\QuickBuilder();
             $config  = $builder->getConfig();
-            $config->setBuildProperty('behavior.event_dispatcher.class', '../src/EventDispatcherBehavior');
             $builder->setConfig($config);
             $builder->setSchema($schema);
 
@@ -66,7 +65,7 @@ EOF;
 
             $that->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
             $that->assertInstanceOf('My\Post', $event->getSubject());
-            $that->assertInstanceOf('PropelPDO', $event->getArgument('connection'));
+            $that->assertInstanceOf('Propel\Runtime\Connection\ConnectionInterface', $event->getArgument('connection'));
         });
 
         Post::getEventDispatcher()->addListener(Post::EVENT_POST_SAVE, function (Event $event) use (& $postSaveFired, $that) {
@@ -74,7 +73,7 @@ EOF;
 
             $that->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
             $that->assertInstanceOf('My\Post', $event->getSubject());
-            $that->assertInstanceOf('PropelPDO', $event->getArgument('connection'));
+            $that->assertInstanceOf('Propel\Runtime\Connection\ConnectionInterface', $event->getArgument('connection'));
         });
 
         $post = new Post();

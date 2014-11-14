@@ -3,7 +3,7 @@
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class EventDispatcherBehavior extends Behavior
+class EventDispatcherBehavior extends \Propel\Generator\Model\Behavior
 {
     /**
      * @var EventDispatcherObjectBuilderModifier
