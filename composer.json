@@ -1,10 +1,15 @@
 {
     "name": "marcj/propel-eventdispatcher-behavior",
-    "description": "Integrates the Symfony2 EventDispatcher component in your Model classes for Propel2 alpha 3. ",
+    "type": "propel-behavior",
+    "description": "Integrates the Symfony2 EventDispatcher component in your Model classes for Propel2 alpha 3.",
     "keywords": [ "propel2", "behavior", "event dispatcher", "event" ],
     "license": "MIT",
     "require": {
         "symfony/event-dispatcher": "~2.1"
+    },
+    "extra": {
+        "name": "event_dispatcher",
+        "class": "EventDispatcherBehavior"
     },
     "authors": [
         {
