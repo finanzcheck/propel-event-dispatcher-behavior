@@ -1,1 +1,1 @@
-self::getEventDispatcher()->dispatch('<?php echo $eventName ?>', new GenericEvent($this<?php if ($withConnection) : ?>, array('connection' => $con)<?php endif; ?>));
+self::getEventDispatcher()->dispatch(new GenericEvent($this<?php if ($withConnection) : ?>, array('connection' => $con)<?php endif; ?>), '<?php echo $eventName ?>');
