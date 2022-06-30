@@ -10,6 +10,11 @@ class EventDispatcherBehavior extends \Propel\Generator\Model\Behavior
      */
     private $objectBuilderModifier;
 
+    public function __construct()
+    {
+        $this->dirname = __DIR__.'/';
+    }
+
     /**
      * {@inheritdoc}
      */
