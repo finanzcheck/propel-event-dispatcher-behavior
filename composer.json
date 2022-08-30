@@ -1,11 +1,11 @@
 {
-    "name": "gharlan/propel-event-dispatcher-behavior",
+    "name": "finanzcheck/propel-event-dispatcher-behavior",
     "type": "propel-behavior",
     "description": "Integrates the Symfony EventDispatcher component in your Model classes for Propel.",
     "keywords": [ "propel", "behavior", "event dispatcher", "event" ],
     "license": "MIT",
     "require": {
-        "symfony/event-dispatcher": "^5.3|^6.0"
+        "symfony/event-dispatcher": "^4.4|^5.3|^6.0"
     },
     "extra": {
         "name": "event_dispatcher",
